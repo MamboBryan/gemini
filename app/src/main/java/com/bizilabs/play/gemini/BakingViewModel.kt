@@ -1,6 +1,7 @@
 package com.bizilabs.play.gemini
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.ai.client.generativeai.GenerativeModel
@@ -18,7 +19,7 @@ class BakingViewModel : ViewModel() {
         _uiState.asStateFlow()
 
     private val generativeModel = GenerativeModel(
-        modelName = "gemini-pro-vision",
+        modelName = "gemini-1.5-flash",
         apiKey = BuildConfig.apiKey
     )
 
@@ -33,13 +34,19 @@ class BakingViewModel : ViewModel() {
                 val response = generativeModel.generateContent(
                     content {
                         image(bitmap)
-                        text(prompt)
+                        text(buildString {
+                            append(prompt)
+                            append("\n")
+                            append("don't return it in markdown format")
+                        })
                     }
                 )
                 response.text?.let { outputContent ->
+                    Log.e("shasha", "sendPrompt: $outputContent ")
                     _uiState.value = UiState.Success(outputContent)
                 }
             } catch (e: Exception) {
+                Log.e("shasha", "sendPrompt: $e ")
                 _uiState.value = UiState.Error(e.localizedMessage ?: "")
             }
         }

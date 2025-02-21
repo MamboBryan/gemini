@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.bizilabs.play.gemini"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.bizilabs.play.gemini"
